@@ -2,8 +2,7 @@
 // ARGUMENTS
 
 var target = Argument("target", "Default");
-
-
+var buildPath = Argument<string>("buildPath");
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN

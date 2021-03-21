@@ -41,10 +41,8 @@ platform: Any CPU
 configuration: Release
 
 build_script:
-  - ps: .\build.ps1
+  - ps: .\build.ps1 --buildPath="./src/AutoReleaseTool/bin/Release"
        
-
-
 
 # Uncomment below to retrive access to AppVeyor build worker VM. https://www.appveyor.com/docs/how-to/rdp-to-build-worker/
 
