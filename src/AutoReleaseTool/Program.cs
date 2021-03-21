@@ -22,8 +22,8 @@ namespace AutoReleaseTool
                         Console.WriteLine($" - {item}");
                     }
 
-                    INugetPackageCreator nugetPack = new NugetPackageCreator(args[0], args[1], args[2]);
-                    ReleaseCreator releaseCreator = new ReleaseCreator(nugetPack);
+                    INugetPackageCreator nugetPackackeCreator = new NugetPackageCreator(args[0], args[1], args[2]);
+                    ReleaseCreator releaseCreator = new ReleaseCreator(nugetPackackeCreator);
                     string releaseResult = releaseCreator.Execute();
 
                     if (releaseResult != String.Empty)
