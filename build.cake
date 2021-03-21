@@ -27,7 +27,6 @@ Teardown(ctx =>
 // BUILD
 
 Task("Restore-NuGet-Packages")
-    .IsDependentOn("Clean")
     .Does(() =>
 {
     NuGetRestore(solutionPath);
