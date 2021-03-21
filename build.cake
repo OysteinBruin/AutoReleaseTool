@@ -2,7 +2,7 @@
 // ARGUMENTS
 
 var target = Argument("target", "Default");
-var buildPath = Argument<string>("buildPath");
+var solutionPath = Argument<string>("buildPath");
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
@@ -25,13 +25,6 @@ Teardown(ctx =>
 ///////////////////////////////////////////////////////////////////////////////
 
 // BUILD
-
-Task("Clean")
-    .WithCriteria(c => HasArgument("rebuild"))
-    .Does(() =>
-{
-    CleanDirectory(buildPath);
-});
 
 Task("Restore-NuGet-Packages")
     .IsDependentOn("Clean")
