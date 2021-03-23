@@ -27,8 +27,9 @@ Push changes to github - the
 ## How to use it manually
 The step to create a new release with AutoReleaseTool manually:
 
-1. Run AutoReleaseTool.exe with 3 parameters 1. build directory, 2. app id(name off application), 3.  :
-   ` path/to/AutoRelease.exe "path/to/release/build/directory" "MyApp" "1.0.0" '
+- Run AutoReleaseTool.exe with 3 parameters 1. build directory, 2. app id(name off application), 3. version number :
+
+ ''' path/to/AutoRelease.exe "path/to/release/build/directory" "MyApp" "1.0.0" '''
 
 Example usage in a cake file used as one of the steps to automate the whole relese process:
 
