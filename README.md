@@ -21,6 +21,7 @@ but the update process requires several manual steps:
 AutoReleaseTool takes care of all of the above steps and uses Squirrel.exe internally. 
 
 With AutoRelease used in a complete CI/CD pipeline configuration, all it takes to create a new release for your desktop application and deploy it to its users is as simple as:
+
 Push your changes to a defined github release branch - and github fires a webhook which kicks of the build process in an [appveyor](https://www.appveyor.com/) WM. 
 See the complete example [below](#complete-example-of-a-CI/CD-setup).
 
