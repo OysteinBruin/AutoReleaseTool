@@ -2,10 +2,10 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/g809ivwcvb7896qy?svg=true)](https://ci.appveyor.com/project/OysteinBruin/autoreleasetool) [![The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 <br/>
 
-AutoReleaseTool assists in removing the manual process of integrating and deploying desktop using [Squirrel - An installation and update framework for Windows desktop apps](https://github.com/Squirrel/Squirrel.Windows)
+AutoReleaseTool assists in removing the manual process of updating and deploying new releases for desktop applications using [Squirrel - An installation and update framework for Windows desktop apps](https://github.com/Squirrel/Squirrel.Windows) 
 
 ## What problem does it solve
-Squirrel is a great tool to manage both installation and updating Windows desktop applications,
+Squirrel is a great tool to manage both installation and updates of Windows desktop applications,
 but the update process requires several manual steps:
 
 1. Update AssemblyInfo.cs AssemblyVerions with new version. b
@@ -20,9 +20,9 @@ but the update process requires several manual steps:
 
 AutoReleaseTool takes care of all of the above steps and uses Squirrel.exe internally. 
 
-When AutoRelease is setup in a CI/CD configuration, all it takes to create a new release for your desktop application and deploy it to users is as simple as:
-Push changes to github - the 
-
+With AutoRelease used in a complete CI/CD pipeline configuration, all it takes to create a new release for your desktop application and deploy it to its users is as simple as:
+Push your changes to a defined github release branch - and github fires a webhook which kicks of the build process in an [appveyor](https://www.appveyor.com/) WM. 
+See the complete setup [below](##Clomplete example of a CI/CD setup).
 
 ## How to use it manually
 The step to create a new release with AutoReleaseTool manually:
@@ -64,5 +64,5 @@ The process requires use of several tools and technologies:
 - Azure
 - Cake
 - PowerShell
--
+- Unit Testing (Optional)
 .. Work in progress, coming soon ..
