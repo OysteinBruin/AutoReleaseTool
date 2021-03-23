@@ -29,7 +29,7 @@ The step to create a new release with AutoReleaseTool manually:
 
 - Run AutoReleaseTool.exe with 3 parameters 1. build directory, 2. app id(name off application), 3. version number :
 
- ''' path/to/AutoRelease.exe "path/to/release/build/directory" "MyApp" "1.0.0" '''
+ ''' path/to/AutoRelease.exe "path/to/release/build/directory" "MyApp" "1.0.0 '''
 
 Example usage in a cake file used as one of the steps to automate the whole relese process:
 
