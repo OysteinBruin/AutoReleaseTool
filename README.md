@@ -53,15 +53,24 @@ Task("Package")
 });
 ```
 
-
 ## Complete example of a CI/CD setup 
 
 The process requires use of several tools and technologies:
-- Squirrel
-- Appveyor
-- Git and Github
-- Azure
-- Cake
-- PowerShell
-- Unit Testing (Optional)
-.. Work in progress, coming soon ..
+- Azure Storage Account - for hosting the release files, required CI/CD tools etc
+- Squirrel - the installation and updating framework
+- Appveyor - the CI/CD service
+- Git and Github - version control and remote
+- Cake - build automation system
+- PowerShell - for running the cake file
+
+ ----  Work in progress, coming soon .. ---
+
+#### Azure Storage Account
+
+#### Squirrel installer and updater
+
+#### appveyor.yml file
+
+#### build.cake
+
+
