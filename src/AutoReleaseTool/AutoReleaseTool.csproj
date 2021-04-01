@@ -3,6 +3,12 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Authors>OysteinBruin</Authors>
+    <PackageProjectUrl>https://github.com/OysteinBruin/AutoReleaseTool</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/OysteinBruin/AutoReleaseTool</RepositoryUrl>
+    <PackageTags>autoreleasetool ci/cd oystein bruin</PackageTags>
+    <Description>AutoReleaseTool assists in removing the manual process of updating and deploying releases for desktop applications using Squirrel Windows installation and update framework.</Description>
+    <PackageReleaseNotes>AutoReleaseTool assists in removing the manual process of updating and deploying releases for desktop applications using Squirrel Windows installation and update framework.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
