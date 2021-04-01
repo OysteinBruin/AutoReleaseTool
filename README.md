@@ -11,6 +11,7 @@ AutoReleaseTool assists in removing the manual process of updating and deploying
 [Complete example of a CI/CD setup](#example)  
 
 <a name="problem"/>
+
 ## What problem does it solve
 Squirrel is a great tool to manage both installation and updates of Windows desktop applications,
 but the update process requires several manual steps:
@@ -33,6 +34,7 @@ Push your changes to a defined github release branch - and github fires a webhoo
 See the complete example [below](#complete-example-of-a-CI/CD-setup).
 
 <a name="manually"/>
+
 ## How to use it manually
 The step to create a new release with AutoReleaseTool manually:
 
@@ -61,6 +63,7 @@ Task("Package")
 });
 ```
 <a name="example"/>
+
 ## Complete example of a CI/CD setup 
 
 The process requires use of several tools and technologies:
