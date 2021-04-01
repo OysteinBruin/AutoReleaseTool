@@ -6,9 +6,9 @@ AutoReleaseTool assists in removing the manual process of updating and deploying
 
 
 ##### Table of Contents  
-[What problem does it solve](#what)  
-[How to use it manually](#how)  
-[Complete example of a CI/CD setup](#complete)  
+[What problem does it solve](#problem)  
+[How to use it manually](#manually)  
+[Complete example of a CI/CD setup](#example)  
  
 ## What problem does it solve
 Squirrel is a great tool to manage both installation and updates of Windows desktop applications,
