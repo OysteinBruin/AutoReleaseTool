@@ -66,22 +66,55 @@ Task("Package")
 
 ## Complete example of a CI/CD setup 
 
-The process requires use of several tools and technologies:
-- Azure Storage Account - for hosting the release files, required CI/CD tools etc
+The process of a setting of a fully automated CI/CD pipeline requires use of several tools and technologies. 
+I have an example project repo, [AutoDeployedWpfDemo](https://github.com/OysteinBruin/AutoDeployedWpfDemo), which demonstrates this using:
+
 - Squirrel - the installation and updating framework
+- Azure Storage Account - for hosting the release files, required CI/CD tools etc
 - Appveyor - the CI/CD service
 - Git and Github - version control and remote
 - Cake - build automation system
 - PowerShell - for running the cake file
 
- ----  Work in progress, coming soon .. ---
+There are several providers of the different services that can be used, e.g: [Azure storage](https://azure.microsoft.com/nb-no/services/storage/) could be replaced with [Amazon S3](https://aws.amazon.com/s3/) and [Appveyor](https://www.appveyor.com/) could probably be replaced with [TeamCity](https://www.jetbrains.com/teamcity/).
+
+### 1. Setup
+
+#### Squirrel
+As mentioned above, Squirrel lets you create the installer file and manages the nuget package files for a new version.
+
+Add Squirrel as a reference to your application 
+
+![](https://github.com/OysteinBruin/AutoDeployedWpfDemo/blob/dev/doc/images/squirrel_nuget.png?raw=true)
+
+Add an CheckForUpdates() method in startup or mainwindow class in your application:
+
+
+```csharp
+private async Task CheckForUpdates()
+{
+    string urlOrPath = @"path/to/your/hosting/provider"; // See Azure Storage Account below
+    
+    using (var manager = new UpdateManager(urlOrPath))
+    {
+        await manager.UpdateApp();
+    }
+}
+```
+Examples from other projects:
+- [AutoDeployedWpfDemo - Mainwwindow codebehind](https://github.com/OysteinBruin/AutoDeployedWpfDemo/blob/master/src/AutoDeployedWpfDemo/MainWindow.xaml.cs)
+- [PlcCom - ShellViewModel](https://github.com/OysteinBruin/PlcCom/blob/main/PlcCom/PlcComUI/ViewModels/ShellViewModel.cs)
+
+You can find more in depth documentation here: [github.com/Squirrel/Squirrel.Windows](https://github.com/Squirrel/Squirrel.Windows/blob/develop/docs/getting-started/1-integrating.md)
+
+
+----  Work in progress, coming soon .. ---
 
 #### Azure Storage Account
 
-#### Squirrel installer and updater
+#### Appveyor
 
-#### appveyor.yml file
+#### Cake (C# Make)
 
-#### build.cake
-
+### 2. Create a new release
 
