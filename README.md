@@ -13,7 +13,7 @@ AutoReleaseTool assists in removing the manual process of updating and deploying
 <a name="problem"/>
 
 ## What problem does it solve
-Squirrel is a great tool to manage both installation and updates of Windows desktop applications,
+Squirrel is a great tool to provide installers and manage updates for Windows desktop applications,
 but the update process requires several manual steps:
 
 1. Update AssemblyInfo.cs AssemblyVerions with new version. b
@@ -28,7 +28,7 @@ but the update process requires several manual steps:
 
 AutoReleaseTool takes care of all of the above steps and uses Squirrel.exe internally. 
 
-With AutoRelease used in a complete CI/CD pipeline configuration, all it takes to create a new release for your desktop application and deploy it to its users is as simple as:
+With AutoReleaseTool used in a complete CI/CD pipeline configuration, all it takes to create a new release for your desktop application and deploy it to its users is as simple as:
 
 Push your changes to a defined github release branch - and github fires a webhook which kicks of the build process in an [appveyor](https://www.appveyor.com/) WM. 
 See the complete example [below](#complete-example-of-a-CI/CD-setup).
@@ -62,6 +62,8 @@ Task("Package")
     });
 });
 ```
+See example project [AutoDeployedWpfDemo's build.cake file](https://github.com/OysteinBruin/AutoDeployedWpfDemo/blob/master/build.cake)
+
 <a name="example"/>
 
 ## Complete example of a CI/CD setup 
@@ -85,7 +87,6 @@ As mentioned above, Squirrel lets you create the installer file and manages the 
 
 Add Squirrel as a reference to your application 
 
-![](https://github.com/OysteinBruin/AutoDeployedWpfDemo/blob/dev/doc/images/squirrel_nuget.png?raw=true)
 
 Add an CheckForUpdates() method in startup or mainwindow class in your application:
 
@@ -101,18 +102,34 @@ private async Task CheckForUpdates()
     }
 }
 ```
-Examples from other projects:
-- [AutoDeployedWpfDemo - Mainwwindow codebehind](https://github.com/OysteinBruin/AutoDeployedWpfDemo/blob/master/src/AutoDeployedWpfDemo/MainWindow.xaml.cs)
+Examples from some of my other projects:
+- [AutoDeployedWpfDemo - MainWindow codebehind](https://github.com/OysteinBruin/AutoDeployedWpfDemo/blob/master/src/AutoDeployedWpfDemo/MainWindow.xaml.cs)
 - [PlcCom - ShellViewModel](https://github.com/OysteinBruin/PlcCom/blob/main/PlcCom/PlcComUI/ViewModels/ShellViewModel.cs)
 
 You can find more in depth documentation here: [github.com/Squirrel/Squirrel.Windows](https://github.com/Squirrel/Squirrel.Windows/blob/develop/docs/getting-started/1-integrating.md)
 
 
+#### Azure Storage Account
+The application installer and updates need to be deploy to an online storage account. This example is using Azure Sorage Account
+
+See Microsoft documentation for how to create an Azure Storage account and create a container for your files: [Create a storage account](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-portal)
+
+Screen shots from the storage account for the example project
+Storage accounts overview:
+
+![](https://github.com/OysteinBruin/AutoReleaseTool/blob/master/doc/images/azure_storage_accounts.png?raw=true)
+
+Create a container inside the storage account for the relase files. The container for my demo app is named releases:
+![](https://github.com/OysteinBruin/AutoReleaseTool/blob/master/doc/images/azure_storage_container.png?raw=true)
+
+The link to be used in the CheckForUpdates() method can be found in the properties page:
+![](https://github.com/OysteinBruin/AutoReleaseTool/blob/master/doc/images/azure_storage_properties.png?raw=true)
+
+
 ----  Work in progress, coming soon .. ---
 
-#### Azure Storage Account
-
 #### Appveyor
+
 
 #### Cake (C# Make)
 
