@@ -26,6 +26,9 @@
     <None Update="Tools\7z.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Tools\azcopy.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Tools\candle.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
