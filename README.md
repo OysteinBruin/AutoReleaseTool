@@ -26,7 +26,7 @@ but the update process requires several manual steps:
 8. Copy the new release files to the defines release location
   Details here: [Squirrel Step 5. Updating](https://github.com/Squirrel/Squirrel.Windows/blob/develop/docs/getting-started/5-updating.md)
 
-AutoReleaseTool takes care of all of the above steps and uses Squirrel.exe internally. 
+With AutoReleaseTool configured in a CI/CD pipeline, all of the above steps is automated. 
 
 With AutoReleaseTool used in a complete CI/CD pipeline configuration, all it takes to create a new release for your desktop application and deploy it to its users is as simple as:
 
@@ -36,11 +36,10 @@ See the complete example [below](#complete-example-of-a-CI/CD-setup).
 <a name="manually"/>
 
 ## How to use AutoReleaseTool manually
-The step to create a new release with AutoReleaseTool manually:
-
-- Run AutoReleaseTool.exe with 3 parameters 1. build directory, 2. app id(name off application), 3. version number :
-
- `path/to/AutoRelease.exe "path/to/release/build/directory" "MyApp" "1.0.0"`
+AutoReleaseTool is made to be used as part of a complete CI/CD pipeline, see [Complete example of a CI/CD setup](#example) below, but it can be used standalone to create updated nuget package and release files. Run AutoReleaseTool.exe with 3 required arguments:
+- app build directory - `"path/to/release/build/directory"`
+- app id(name off application) - `"MyAppName"`
+- version number - `"1.0.0"`
 
 Example usage in a cake file used as one of the steps to automate the whole relese process:
 
@@ -95,7 +94,7 @@ Add an CheckForUpdates() method in startup or mainwindow class in your applicati
 ```csharp
 private async Task CheckForUpdates()
 {
-    string urlOrPath = @"path/to/your/hosting/provider"; // See Azure Storage Account below
+    string urlOrPath = @"path/to/release/files/"; // See Azure Storage Account below
     
     using (var manager = new UpdateManager(urlOrPath))
     {
@@ -129,12 +128,26 @@ The link to be used in the CheckForUpdates() method can be found in the properti
 
 
 
-#### Appveyor
-Appveyor is the CI/CD service that builds and deploys a new release. 
-When you commit code and merge it to the defined release branch and push to GitHub, a webhook for AppVeyor is triggered to kick off the continuous integration build. Appveyor starts a new VM for your project and run the steps defined in the build configuration defined in the appveyor.yml [Register an account](https://www.appveyor.com/) and read more about configuring AppVeyor to work with GitHub [here](https://www.appveyor.com/docs/).
+#### Appveyor, Cake, git and Github
+Appveyor is the CI/CD service that runs the build and deployment of a new release, depending on what it is configured to do.
+When you commit code and merge it to the defined release branch and push to GitHub, a webhook for AppVeyor is triggered to kick off the continuous integration build. Appveyor starts a new VM an copies the source files from github, and run the steps defined in the build configuration (appveyor.yml and build.ps1/build.cake files). 
+[Register an account](https://www.appveyor.com/) at appveyor.com, and read more about configuring AppVeyor to work with GitHub [here](https://www.appveyor.com/docs/).
 
-'appveyor.yml' configuration for the [AutoDeployedWpfDemo]()
+The 'appveyor.yml' and build.cake config files is located in the root of the source code for [AutoDeployedWpfDemo](https://github.com/OysteinBruin/AutoDeployedWpfDemo/blob/master/appveyor.yml):
 
+_appveyor.yml setup for this example_
+  - general configuration:
+      - set version path nr to current build 
+      - only start if the commit is on the master branch.
+  - environment configuration: 
+      - increase the version number and update it in the AssemblyInfo.cs
+  -build configuration
+      - run build.ps1, wich starts build.cake with the required arguments for running build and various tasks:
+          - _build.cake tasks:_
+          - 
+  - collect the files in the releases folder 
+
+appveyor.yml :
 ```
 #---------------------------------#
 #      general configuration      #
@@ -145,16 +158,6 @@ version: 1.0.{build}
 branches:
   only:
    - master
- 
-
-#---------------------------------#
-#    test configuration           #
-#---------------------------------#
-test: off
-  # only assemblies to test
- # assemblies:
- #   only:
-        
 
 #---------------------------------#
 #    environment configuration    #
@@ -188,8 +191,6 @@ build_script:
 
 after_build:
   - ps: Get-ChildItem .\releases | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
- # - ps: Push-AppveyorArtifact ./AutoReleaseTool/Tools/Update.exe
-
   
 #---------------------------------#
 #     deployment configuration    #
@@ -208,8 +209,119 @@ deploy:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))    
 ```
 
-----  Work in progress, coming soon .. ---
-#### Cake (C# Make)
 
-### 2. Create a new release
+Cake (C# Make) is a cross-platform build automation system with a C# DSL for tasks such as compiling code, copying files and folders, running unit tests, compressing files and building NuGet packages.
+
+build.cake :
+```
+#addin nuget:?package=AutoReleaseTool&version=1.0.2
+
+// ARGUMENTS
+
+var target = Argument("target", "Default");
+var solutionPath = Argument<string>("solutionPath");
+var buildPath = Argument<string>("buildPath");
+var appId  = Argument<string>("appId");
+var appVersion = Argument<string>("appVersion");
+
+
+///////////////////////////////////////////////////////////////////////////////
+// SETUP / TEARDOWN
+///////////////////////////////////////////////////////////////////////////////
+
+Setup(ctx =>
+{
+   // Executed BEFORE the first task.
+   Information("Running tasks...");
+});
+
+Teardown(ctx =>
+{
+   // Executed AFTER the last task.
+   Information("Finished running tasks.");
+});
+
+///////////////////////////////////////////////////////////////////////////////
+// TASKS
+///////////////////////////////////////////////////////////////////////////////
+
+// BUILD
+
+Task("Clean")
+    .WithCriteria(c => HasArgument("rebuild"))
+    .Does(() =>
+{
+    CleanDirectory(buildPath);
+});
+
+Task("Restore-NuGet-Packages")
+    .IsDependentOn("Clean")
+    .Does(() =>
+{
+    NuGetRestore(solutionPath);
+});
+
+Task("Build")
+    .IsDependentOn("Restore-NuGet-Packages")
+    .Does(() =>
+{
+    MSBuild(solutionPath, settings =>
+        settings.SetConfiguration("Release"));
+});
+
+// TEST - TODO: add test task here
+Information("No Unit Tests are added yet.");
+
+//
+Task("DownloadPreviousReleaseFiles")
+    .IsDependentOn("Build")
+    .Does(() =>
+{
+    Information("Downloading previous release files");
+    
+    FilePath azcopyPath = "./tools/Addins/AutoReleaseTool.1.0.2/lib/net45/Tools/azcopy.exe";
+    StartProcess(azcopyPath, new ProcessSettings {
+        Arguments = new ProcessArgumentBuilder()
+            .Append("copy")
+            .Append("https://autodeployedwpfdemo.blob.core.windows.net/releases/")
+            .Append("./")
+            .Append("--recursive")
+    });
+});
+
+// PREPARE 
+
+Task("Package")
+    .IsDependentOn("DownloadPreviousReleaseFiles")
+    .Does(() => 
+{
+    if (!DirectoryExists("./releases"))
+    {
+        CreateDirectory("./releases");
+    }
+    FilePath autoReleasePath = "./tools/Addins/AutoReleaseTool.1.0.2/lib/net45/AutoReleaseTool.exe";
+    StartProcess(autoReleasePath, new ProcessSettings {
+    Arguments = new ProcessArgumentBuilder()
+        .Append(buildPath)
+        .Append(appId)
+        .Append(appVersion)
+    });
+});
+
+
+// EXECUTION
+Task("Default").IsDependentOn("Package");
+
+RunTarget(target);
+```
+
+### 2. Create a new release   
+
+Commit changes and push - thats it.
+
+If you use a separate branch for development and production (or pull requests):
+- commit all changes to yur dev branch
+- ```git checkcout master```
+- ```git merge dev```
+- ```git push```
 
