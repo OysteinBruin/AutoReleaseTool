@@ -1,5 +1,7 @@
 # AutoReleaseTool   
-[![Build status](https://ci.appveyor.com/api/projects/status/g809ivwcvb7896qy?svg=true)](https://ci.appveyor.com/project/OysteinBruin/autoreleasetool) [![The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![Build status](https://ci.appveyor.com/api/projects/status/g809ivwcvb7896qy?svg=true)](https://ci.appveyor.com/project/OysteinBruin/autoreleasetool)
+[![The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![NuGet](https://img.shields.io/nuget/v/AutoReleaseTool.svg?label=NuGet&style=flat)](https://www.nuget.org/packages/AutoReleaseTool/)
 <br/>
 
 AutoReleaseTool assists in removing the manual process of updating and deploying new releases for desktop applications using [Squirrel - An installation and update framework for Windows desktop apps](https://github.com/Squirrel/Squirrel.Windows) 
@@ -28,10 +30,10 @@ but the update process requires several manual steps:
 
 With AutoReleaseTool configured in a CI/CD pipeline, all of the above steps is automated. 
 
-With AutoReleaseTool used in a complete CI/CD pipeline configuration, all it takes to create a new release for your desktop application and deploy it to its users is as simple as:
+All it takes to create a new release for your desktop application and deploy it to its users is as simple as:
 
-Push your changes to a defined github release branch - and github fires a webhook which kicks of the build process in an [appveyor](https://www.appveyor.com/) WM. 
-See the complete example [below](#complete-example-of-a-CI/CD-setup).
+Push the changes to a defined github release branch - and github fires a webhook which kicks of the build process in an [appveyor](https://www.appveyor.com/) Virtual Machine. 
+See the complete example below - [Complete example of a CI/CD setup](#example).
 
 <a name="manually"/>
 
@@ -138,14 +140,17 @@ The 'appveyor.yml' and build.cake config files is located in the root of the sou
 _appveyor.yml setup for this example_
   - general configuration:
       - set version path nr to current build 
-      - only start if the commit is on the master branch.
+      - only run pipeline if the commit is on the master branch.
   - environment configuration: 
-      - increase the version number and update it in the AssemblyInfo.cs
-  -build configuration
-      - run build.ps1, wich starts build.cake with the required arguments for running build and various tasks:
-          - _build.cake tasks:_
-          - 
-  - collect the files in the releases folder 
+      - increase the version number and update it in AssemblyInfo.cs
+  -build configuration:
+      - build.ps1 starts build.cake with the required arguments for running build and various tasks:
+          - Addin directive used to get AutoReleaseTool from nuget.org
+          - Build application - Nuget Restore and MSBuild 
+          - Download previous release files from Azure storage account (if exists), to let Squirrel create a delta release
+          - Create "releases" folder and finally run AutoReleaseTool to create the release files in the release folder
+  - after build: list all files in releases folder as artifacts - more info here: [packaging-artifacts](https://www.appveyor.com/docs/packaging-artifacts/)
+  - deploy: upload all artifacts to the Azure storage account container - more info here: [Deploying to Azure blob storage](https://www.appveyor.com/docs/deployment/azure-blob/)
 
 appveyor.yml :
 ```
