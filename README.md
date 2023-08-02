@@ -2,6 +2,8 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/g809ivwcvb7896qy?svg=true)](https://ci.appveyor.com/project/OysteinBruin/autoreleasetool)
 [![The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![NuGet](https://img.shields.io/nuget/v/AutoReleaseTool.svg?label=NuGet&style=flat)](https://www.nuget.org/packages/AutoReleaseTool/)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/AutoReleaseTool.svg)]
+(https://www.nuget.org/packages/AutoReleaseTool/)
 <br/>
 
 AutoReleaseTool assists in removing the manual process of updating and deploying new releases for desktop applications using [Squirrel - An installation and update framework for Windows desktop apps](https://github.com/Squirrel/Squirrel.Windows) 
